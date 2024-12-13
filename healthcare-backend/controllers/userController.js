@@ -35,7 +35,9 @@ exports.loginUser = async (req, res) => {
       return res.status(200).json({
         message: 'Login successful',
         otp: '12345', // Static OTP for default accounts
+        isOtpSent: true, // Flag to indicate OTP is required
         role: user.role,
+        isDefault: true,
         token,
       });
     }
@@ -55,11 +57,15 @@ exports.loginUser = async (req, res) => {
       `Your OTP is ${otp}. It will expire in 5 minutes.`
     );
 
-    res.status(200).json({ message: 'OTP sent to your email', token });
+    res.status(200).json({ message: 'OTP sent to your email', 
+      isOtpSent: true, // Flag to indicate OTP is required
+      token });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+
 // OTP Verification function
 exports.verifyOTP = async (req, res) => {
   const { email, otp } = req.body;
